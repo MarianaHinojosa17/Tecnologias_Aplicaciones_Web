@@ -1,0 +1,9 @@
+<?php 
+
+	//ARCHIVO QUE SE CREA PARA PODER MANDAR LLAMAR LOS METODOS DE ELIMINAR ENCONTRADOS EN EL CONTROLADOR
+	// ESTE ARCHIVO NO MUESTRA NADA
+	$borrar = new MvcController();
+	$borrar -> borrarCarreraController();
+
+
+?>
