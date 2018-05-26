@@ -1,25 +1,31 @@
 <?php
 
-#EXTENSIÓN DE CLASES: Los objetos pueden ser extendidos, y pueden heredar propiedades y métodos. Para definir una clase como extensión, debo definir una clase padre, y se utiliza dentro de una clase hija.
+
+/*
+	SE MANDA LLAMAR EL ARCHIVO CONEXION
+*/
 
 require_once "conexion.php";
 
-//heredar la clase conexion de conexion.php para poder utilizar "Conexion" del archivo conexion.php.
-// Se extiende cuando se requiere manipuar una funcion, en este caso se va a  manipular la función "conectar" del models/conexion.php:
 class Datos extends Conexion{
 
 
 
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
 
-	#INGRESO USUARIO
-	#-------------------------------------
+		SE CREA LA FUNCION EN LA CUAL MEDIANTE LA CONEXION SE SELECCION DE LA TABLA MAESTROS, EL EMAIL Y EL PASWORD QUE HAYA DADO EN EL ARRAY EL CONTROLADOR
+
+		ESTA CONSULTA SE EJECUTA Y SE DEVUELVE
+	*/
+
 	public function ingresoUsuarioModel($datosModel, $tabla){
 
 		$stmt = Conexion::conectar()->prepare("SELECT email, pass FROM $tabla WHERE email = :email");	
 		$stmt->bindParam(":email", $datosModel["email"], PDO::PARAM_STR);
 		$stmt->execute();
 
-		#fetch(): Obtiene una fila de un conjunto de resultados asociado al objeto PDOStatement. 
+	
 		return $stmt->fetch();
 
 		$stmt->close();
@@ -28,25 +34,20 @@ class Datos extends Conexion{
 
 
 
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
 
+		EN LA SIGUIENTE FUNCION SE INSERTA EN LA TABLA DADA LOS VALORES QUE MANDO EL CONTROLADOR
 
-
-	#REGISTRO DE USUARIOS
-	#-------------------------------------
+		SI SE EJECUTA CORRECTAMENTE DEVUELVE COMO VALOR SUCCESS, SI NO, DEVUELVE UN ERROR
+	*/
+	
 	public function registroCarreraModel($datosModel, $tabla){
-
-		#prepare() Prepara una sentencia SQL para ser ejecutada por el método PDOStatement::execute(). La sentencia SQL puede contener cero o más marcadores de parámetros con nombre (:name) o signos de interrogación (?) por los cuales los valores reales serán sustituidos cuando la sentencia sea ejecutada. Ayuda a prevenir inyecciones SQL eliminando la necesidad de entrecomillar manualmente los parámetros
-		//echo $datosModel;
-
 
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (nombre) VALUES (:nombre)");	
 
-		#bindParam() Vincula una variable de PHP a un parámetro de sustitución con nombre o de signo de interrogación correspondiente de la sentencia SQL que fue usada para preparar la sentencia.
-
 		$stmt->bindParam(":nombre", $datosModel["nombre"], PDO::PARAM_STR);		
-		//$stmt->bindParam(":password", $datosModel["password"], PDO::PARAM_STR);
-		//$stmt->bindParam(":email", $datosModel["email"], PDO::PARAM_STR);
 
 		if($stmt->execute()){
 
@@ -65,9 +66,13 @@ class Datos extends Conexion{
 	}
 
 
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO EL NOMBRE DE LA TABLA
 
-	#VISTA USUARIOS
-	#-------------------------------------
+		EN LA SIGUIENTE FUNCION SE SELECCIONA LOS VALORES DE LA TABLA DADA
+
+		SE RETORNA LA INFORMACION QUE SE TOME DE LA CONSULTA 
+	*/
 
 	public function vistaCarrerasModel($tabla){
 
@@ -76,17 +81,20 @@ class Datos extends Conexion{
 		$stmt = Conexion::conectar()->prepare("SELECT id_carrera,nombre FROM $tabla");	
 		$stmt->execute();
 
-
-
-		#fetchAll(): Obtiene todas las filas de un conjunto de resultados asociado al objeto PDOStatement. 
 		return $stmt->fetchAll();
 
 		$stmt->close();
 
 	}
 
-	#EDITAR USUARIO
-	#-------------------------------------
+	
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE CONSULTA LOS VALORES DE LA TABLA DADA, DONDE SE CONIDICIONA QUE COINCIDAN CON LOS VALORES DADOS
+
+		REGRESA LA INFORMACION OBTENIDA DE LA CONSULTA
+	*/
 
 	public function editarCarreraModel($datosModel, $tabla){
 
@@ -100,8 +108,15 @@ class Datos extends Conexion{
 
 	}
 
-	#ACTUALIZAR USUARIO
-	#-------------------------------------
+	
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		SE ACTUALIZA EN LA TABLA DADA, LOS VALORES QUE MANDO EL CONTROLADOR EN EL ARRAY
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
+
 
 	public function actualizarCarreraModel($datosModel, $tabla){
 
@@ -127,8 +142,15 @@ class Datos extends Conexion{
 	}
 
 
-	#BORRAR USUARIO
-	#------------------------------------
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE MANDA ELIMINAR DE LA TABLA QUE SE DA COMO PARAMETRO LA FILA QUE TENGA EL ID DADO POR EL CONTROLADOR
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
+
+
 	public function borrarCarreraModel($datosModel, $tabla){
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_carrera = :id_carrera");
@@ -153,25 +175,24 @@ class Datos extends Conexion{
 	}
 
 
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE SELECCIONA LOS VALORES DE LA TABLA DADA
+
+		SE RETORNA LA INFORMACION QUE SE TOME DE LA CONSULTA 
+	*/
+
 
 	public function vistaMaestrosModel($tabla){
 
-		
-
 
 		$stmt = Conexion::conectar()->prepare("SELECT *, carreras.nombre as carNom, $tabla.nombre, $tabla.email, $tabla.pass FROM $tabla inner join carreras on $tabla.id_carrera = carreras.id_carrera");
-		//$stmt = Conexion::conectar()->prepare("SELECT $tabla.id_maestro, carreras.nombre as carNom, $tabla.nombre as masNom, $tabla.email, $tabla.pass FROM $tabla inner join carreras on $tabla.id_carrera = carreras.id_carrera");	
+
 		$stmt->execute();
 
-
-
-		#fetchAll(): Obtiene todas las filas de un conjunto de resultados asociado al objeto PDOStatement. 
-		//$stmt[1] = "ITI"
 		$results = $stmt->fetchAll();
 
-		//$results["id_carrera"] = "ITI";
-		//$results[1] = "ITI";
-		//return $stmt->fetchAll();
 		return $results;
 
 
@@ -179,28 +200,26 @@ class Datos extends Conexion{
 
 	}
 
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE INSERTA EN LA TABLA DADA LOS VALORES QUE MANDO EL CONTROLADOR
+
+		SI SE EJECUTA CORRECTAMENTE DEVUELVE COMO VALOR SUCCESS, SI NO, DEVUELVE UN ERROR
+	*/
+
 	public function registroMaestroModel($datosModel, $tabla){
 
 
-
-		//echo $datosModel["carrera"];
-		/*$stmt1 = Conexion::conectar()->prepare("SELECT id_carrera from carrera where nombre = :carrera");
-		$stmt1->execute();
-		$results = $stmt1->fetchAll();
-		$id_c = $results[0][0];
-
-		$stmt1->bindParam(":carrera", $datosModel["carrera"]);*/
-
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (id_carrera,nombre,email,pass) VALUES (:carrera,:nombre,:email,:pass)");	
 
-		#bindParam() Vincula una variable de PHP a un parámetro de sustitución con nombre o de signo de interrogación correspondiente de la sentencia SQL que fue usada para preparar la sentencia.
 
 		$stmt->bindParam(":carrera", $datosModel["carrera"]);
 		$stmt->bindParam(":nombre", $datosModel["nombre"]);	
 		$stmt->bindParam(":email", $datosModel["email"]);	
 		$stmt->bindParam(":pass", $datosModel["pass"]);			
-		//$stmt->bindParam(":password", $datosModel["password"], PDO::PARAM_STR);
-		//$stmt->bindParam(":email", $datosModel["email"], PDO::PARAM_STR);
+
 
 		if($stmt->execute()){
 
@@ -219,6 +238,17 @@ class Datos extends Conexion{
 	}
 
 
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE CONSULTA LOS VALORES DE LA TABLA DADA, DONDE SE CONIDICIONA QUE COINCIDAN CON LOS VALORES DADOS
+
+		REGRESA LA INFORMACION OBTENIDA DE LA CONSULTA
+	*/
+
+
 	public function editarMaestroModel($datosModel, $tabla){
 
 
@@ -232,12 +262,20 @@ class Datos extends Conexion{
 
 	}
 
-	#ACTUALIZAR USUARIO
-	#-------------------------------------
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		SE ACTUALIZA EN LA TABLA DADA, LOS VALORES QUE MANDO EL CONTROLADOR EN EL ARRAY
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
 
 	public function actualizarMaestroModel($datosModel, $tabla){
 
-		//echo "hola";
+
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_carrera = :carrera, nombre = :nombre, email = :email, pass = :pass WHERE id_maestro = :id_maestro");
 
 		$stmt->bindParam(":id_maestro", $datosModel["id_maestro"]);
@@ -262,6 +300,17 @@ class Datos extends Conexion{
 
 	}
 
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE MANDA ELIMINAR DE LA TABLA QUE SE DA COMO PARAMETRO LA FILA QUE TENGA EL ID DADO POR EL CONTROLADOR
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
+
 	public function borrarMaestroModel($datosModel, $tabla){
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_maestro = :id_maestro");
@@ -285,24 +334,30 @@ class Datos extends Conexion{
 
 	}
 
+
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE SELECCIONA LOS VALORES DE LA TABLA DADA
+
+		SE RETORNA LA INFORMACION QUE SE TOME DE LA CONSULTA 
+	*/
+
 	public function vistaAlumnosModel($tabla){
 
 		
 
 
 		$stmt = Conexion::conectar()->prepare("SELECT *, carreras.nombre as carNom, maestros.nombre as masNom, alumno.nombre as alumNom FROM $tabla inner join carreras on $tabla.id_carrera = carreras.id_carrera inner join maestros on $tabla.id_tutor = maestros.id_maestro");
-		//$stmt = Conexion::conectar()->prepare("SELECT $tabla.id_maestro, carreras.nombre as carNom, $tabla.nombre as masNom, $tabla.email, $tabla.pass FROM $tabla inner join carreras on $tabla.id_carrera = carreras.id_carrera");	
+
 		$stmt->execute();
 
-
-
-		#fetchAll(): Obtiene todas las filas de un conjunto de resultados asociado al objeto PDOStatement. 
-		//$stmt[1] = "ITI"
 		$results = $stmt->fetchAll();
 
-		//$results["id_carrera"] = "ITI";
-		//$results[1] = "ITI";
-		//return $stmt->fetchAll();
+
 		return $results;
 
 
@@ -310,20 +365,29 @@ class Datos extends Conexion{
 
 	}
 
+
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE INSERTA EN LA TABLA DADA LOS VALORES QUE MANDO EL CONTROLADOR
+
+		SI SE EJECUTA CORRECTAMENTE DEVUELVE COMO VALOR SUCCESS, SI NO, DEVUELVE UN ERROR
+	*/
+
 	public function registroAlumnoModel($datosModel, $tabla){
 
 
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (matricula,nombre,id_carrera,id_tutor) VALUES (:matricula,:nombre,:carrera,:tutor)");	
 
-		#bindParam() Vincula una variable de PHP a un parámetro de sustitución con nombre o de signo de interrogación correspondiente de la sentencia SQL que fue usada para preparar la sentencia.
 
 		$stmt->bindParam(":matricula", $datosModel["matricula"]);
 		$stmt->bindParam(":nombre", $datosModel["nombre"]);	
 		$stmt->bindParam(":carrera", $datosModel["carrera"]);	
 		$stmt->bindParam(":tutor", $datosModel["tutor"]);			
-		//$stmt->bindParam(":password", $datosModel["password"], PDO::PARAM_STR);
-		//$stmt->bindParam(":email", $datosModel["email"], PDO::PARAM_STR);
 
 		if($stmt->execute()){
 
@@ -343,7 +407,6 @@ class Datos extends Conexion{
 
 	public function editarAlumnoModel($datosModel, $tabla){
 
-		//echo $datosModel;
 
 		$stmt = Conexion::conectar()->prepare("SELECT *, carreras.nombre as carNom, maestros.nombre as masNom, alumno.nombre as alumNom, $tabla.id_carrera as carAlum FROM $tabla inner join carreras on $tabla.id_carrera = carreras.id_carrera inner join maestros on $tabla.id_tutor = maestros.id_maestro WHERE id_alumno = :id_alumno");
 		$stmt->bindParam(":id_alumno", $datosModel, PDO::PARAM_INT);
@@ -355,12 +418,19 @@ class Datos extends Conexion{
 
 	}
 
-	#ACTUALIZAR USUARIO
-	#-------------------------------------
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		SE ACTUALIZA EN LA TABLA DADA, LOS VALORES QUE MANDO EL CONTROLADOR EN EL ARRAY
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
 
 	public function actualizarAlumnoModel($datosModel, $tabla){
 
-		//echo "hola";
+		
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET matricula = :matricula, nombre = :nombre, id_carrera = :carrera, id_tutor = :tutor WHERE id_alumno = :id_alumno");
 
 		$stmt->bindParam(":id_alumno", $datosModel["id_alumno"]);
@@ -385,6 +455,17 @@ class Datos extends Conexion{
 
 	}
 
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE MANDA ELIMINAR DE LA TABLA QUE SE DA COMO PARAMETRO LA FILA QUE TENGA EL ID DADO POR EL CONTROLADOR
+
+		SI SE REALIZO LA ACTUALIZACION CORRECTAMENTE, SE MANDA UN SUCCES, DE LO CONTRARIO SE MANDA UN ERROR
+	*/
+
 	public function borrarAlumnoModel($datosModel, $tabla){
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_alumno = :id_alumno");
@@ -408,9 +489,16 @@ class Datos extends Conexion{
 
 	}
 
-	public function vistaTutoriasModel($tabla){
 
-		
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE SELECCIONA LOS VALORES DE LA TABLA DADA
+
+		SE RETORNA LA INFORMACION QUE SE TOME DE LA CONSULTA 
+	*/
+
+	public function vistaTutoriasModel($tabla){
 
 
 		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
@@ -430,9 +518,6 @@ class Datos extends Conexion{
 		
 		$stmt = Conexion::conectar()->prepare("SELECT *, alumno.nombre as alumNom, maestros.nombre as masNom FROM $tabla inner join alumno on $tabla.id_alumno = alumno.id_alumno inner join maestros on $tabla.id_maestro = maestros.id_maestro where id_tutoria = :id_tutoria");
 
-		//echo $tabla;
-
-		//$stmt = Conexion::conectar()->prepare("SELECT * from $tabla where id_tutoria = :id_tutoria");
 
 		$stmt->bindParam(":id_tutoria", $datosModel, PDO::PARAM_INT);
 
@@ -450,43 +535,5 @@ class Datos extends Conexion{
 }
 
 
-
-
-/*
-
-#REGISTRO DE PRODUCTOS
-	#-------------------------------------
-	public function registroProductosModel($datosModel, $tabla){
-
-		#prepare() Prepara una sentencia SQL para ser ejecutada por el método PDOStatement::execute(). La sentencia SQL puede contener cero o más marcadores de parámetros con nombre (:name) o signos de interrogación (?) por los cuales los valores reales serán sustituidos cuando la sentencia sea ejecutada. Ayuda a prevenir inyecciones SQL eliminando la necesidad de entrecomillar manualmente los parámetros.
-
-		$stmt1 = Conexion::conectar()->prepare("INSERT INTO $tabla (nombreProd, descProduc, BuyPrice,SalePrice, Proce) VALUES (:nombreProd,:descProduc,:BuyPrice,:SalePrice,:Proce)");	
-
-		#bindParam() Vincula una variable de PHP a un parámetro de sustitución con nombre o de signo de interrogación correspondiente de la sentencia SQL que fue usada para preparar la sentencia.
-
-		$stmt1->bindParam(":nombreProd", $datosModel["nombreProd"], PDO::PARAM_STR);
-		$stmt1->bindParam(":descProduc", $datosModel["descProduc"], PDO::PARAM_STR);
-		$stmt1->bindParam(":BuyPrice", $datosModel["BuyPrice"], PDO::PARAM_STR);
-		$stmt1->bindParam(":SalePrice", $datosModel["SalePrice"], PDO::PARAM_STR);
-		$stmt1->bindParam(":Proce", $datosModel["Proce"], PDO::PARAM_STR);
-		
-
-		if($stmt1->execute()){
-
-			return "success";
-
-		}
-
-		else{
-
-			return "error";
-
-		}
-
-		$stmt1->close();
-
-	}
-
-*/
 
 ?>

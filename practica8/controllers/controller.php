@@ -2,8 +2,8 @@
 
 class MvcController{
 
-	#LLAMADA A LA PLANTILLA
-	#-------------------------------------
+	/* EN LA SIGUIENTE FUNCION SE MANDA LLAMAR EL TEMPLATE QUE CONTIENE EL DISEÑO
+	*/
 
 	public function pagina(){	
 		
@@ -11,9 +11,10 @@ class MvcController{
 	
 	}
 
-	#ENLACES
-	#-------------------------------------
 
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LA ACCION QUE DESA EL USUARIO Y SE MANDA EJECUTAR LA FUNCION ENLACES PAGINAS DEL MODELO, DANDO COMO PARAMETRO EL VALOR QUE CONTENGA LA VARIABLE ENLACES
+	*/
 	public function enlacesPaginasController(){
 
 		if(isset( $_GET['action'])){
@@ -34,6 +35,10 @@ class MvcController{
 	}
 
 
+
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LO QUE HAYA INGRESADO EL USUARIO PARA INICIAR SESION, SE GUARDA EN UN ARRAY Y SE DA COMO PARAMETRO PARA EJECUTAR LA FUNCION INGRESO USAURIO DEL MODELO, DEPENDIENDO LA RESPUESTA QUE REGRESE LA FUNCION SE CONDICIONA SI INICIA SESION O NO
+	*/
 
 	public function ingresoUsuarioController(){
 
@@ -66,13 +71,17 @@ class MvcController{
 
 
 
-	#REGISTRO DE USUARIOS
-	#------------------------------------
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LO QUE HAYA INGRESADO EL USUARIO EN LA VISTA, SE CONDICIONA QUE SI SE OPRIME EL BOTON CON EL NOMBRE GUARDAR, SE TOMARA LO QUE HAYA INGRESADO EN LA CAJA DE TEXTO, Y ESTO SE GUARDA EN UN ARRAY, LA CUAL DESPUES SE USA COMO PARAMETRO PARA EJECUTAR LA FUNCION DE REGISTRO CARRERA DEL MODELO
+		EL MODELO DEVUELVE UNA RESPUESTA, SI ES CORRECTA TE DEVUELVE A LA VISTA DE CARRERAS, SI NO REGRESA AL INDEX
+	*/
 	public function registroCarrerasController(){
+
+
+
 
 		if(isset($_POST["guardar"]))
 		{
-			//Recibe a traves del método POST el name (html) de usuario, password y email, se almacenan los datos en una variable de tipo array con sus respectivas propiedades (usuario, password y email):
 
 			if (isset($_POST["nombre"])) 
 			{
@@ -80,10 +89,9 @@ class MvcController{
 			}
 			
 
-			//Se le dice al modelo models/crud.php (Datos::registroUsuarioModel),que en la clase "Datos", la funcion "registroUsuarioModel" reciba en sus 2 parametros los valores "$datosController" y el nombre de la tabla a conectarnos la cual es "usuarios":
 			$respuesta = Datos::registroCarreraModel($datosController, "carreras");
 
-			//se imprime la respuesta en la vista 
+		
 			if($respuesta == "success"){
 
 				header("location:index.php?action=carreras");
@@ -100,17 +108,19 @@ class MvcController{
 	}
 
 
-	#VISTA DE USUARIOS
-	#------------------------------------
+
+	/*
+		SE CREA UNA FUNCION QUE EJECUTA UNA FUNCION DEL MODELO LLAMADA VISTA CARRERAS, DANDOLE COMO PARAMETRO EL NOMBRE DE LA TABLA DONDE SE ENCUENTRA LA INFORMACION
+
+		LA FUNCION DEL MODELO DEVUELVE UN ARRAY CON LA INFORMACION QUE ENCONTRO, MEDIANTE UN CICLO SE IMPRIME EL CUERPO DE LA TABLA DE LA VISTA DANDO COMO CADA FILA CADA CARRERA REGISTRADA
+	*/
 
 	public function vistaCarrerasController(){
 
 
 		$respuesta = Datos::vistaCarrerasModel("carreras");
 
-		#El constructor foreach proporciona un modo sencillo de iterar sobre arrays. foreach funciona sólo sobre arrays y objetos, y emitirá un error al intentar usarlo con una variable de un tipo diferente de datos o una variable no inicializada.
-
-		//print_r($respuesta);
+		
 
 		foreach($respuesta as $row => $item){
 		echo'<tr>
@@ -124,8 +134,13 @@ class MvcController{
 
 	}
 
-	#EDITAR USUARIO
-	#------------------------------------
+	
+	/*
+		EN LA SIGUIENTE FUNCION, SE TRAE EL ID DE LA CARRERA QUE EL USUARIO DESEA MODIFICAR Y SE GUARDA EN UN ARRAY EL CUAL SE USA DESPUES COMO PARAMETRO PARA MANDAR EJECUTA UNA FUNCION DEL MODELO
+
+		CON LA RESPUESTA QUE REGRESE LA FUNCION DEL MODELO SE IMPRIME LA VISTA CON LA RESPECTIVA INFORMACION DE LA CARRERA SELECCIONADA
+
+	*/
 
 	public function editarCarreraController(){
 
@@ -148,8 +163,13 @@ class MvcController{
 			 </center>';
 	}
 
-	#ACTUALIZAR USUARIO
-	#------------------------------------
+	
+	/*
+		TENIENDO LA VISTA CON LA INFORMACION RESPECTIVA, SE CREA UNA FUNCION QUE PERMITA TRAER LA INFORMACION MODIFICADA DE LA VISTA, SE GUARDA EN UN ARRAY, Y ESTE SE UTILIZA POSTERIORMENTE COMO PARAMETRO PARA EJECUTAR LA FUNCION DE ACTUALIZAR CARRERA DEL MODELO
+
+		LA FUNCION DEL MODELO REGRESA UNA RESPUESTA, SI ES CORRECTA TE DIRECCIONA A LA VISTA, SI NO, TE MANDA UN ERROR
+	*/
+
 	public function actualizarCarreraController(){
 
 		//if(isset($_POST))
@@ -178,8 +198,14 @@ class MvcController{
 	
 	}
 
-	#BORRAR USUARIO
-	#------------------------------------
+	
+
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA EL ID DE LA CARRERA QUE HAYA SELECCIONADO EL USUARIO PARA ELIMINAR, SE GUARDA ESE ID EN UN ARRAY EL CUAL SE USA COMO PARAMETRO PARA MANDAR LLAMAR LA FUNCION DEL MODELO BORRAR CARRERA
+
+		LA FUNCION DEVUELVE UNA RESPUESTA Y ESTA SE CONDICIONA, SI ES SATISFACTORIA TE DEVUELVE A LA VISTA
+	*/
+
 	public function borrarCarreraController(){
 
 		if(isset($_GET["idBorrar"])){
@@ -198,14 +224,19 @@ class MvcController{
 
 	}
 
+
+
+	/*
+		SE CREA UNA FUNCION QUE EJECUTA UNA FUNCION DEL MODELO LLAMADA VISTA MAESTROS, DANDOLE COMO PARAMETRO EL NOMBRE DE LA TABLA DONDE SE ENCUENTRA LA INFORMACION
+
+		LA FUNCION DEL MODELO DEVUELVE UN ARRAY CON LA INFORMACION QUE ENCONTRO, MEDIANTE UN CICLO SE IMPRIME EL CUERPO DE LA TABLA DE LA VISTA DANDO COMO CADA FILA CADA CARRERA REGISTRADA
+	*/
+
 	public function vistaMaestrosController(){
 
 
 		$respuesta = Datos::vistaMaestrosModel("maestros");
 
-		#El constructor foreach proporciona un modo sencillo de iterar sobre arrays. foreach funciona sólo sobre arrays y objetos, y emitirá un error al intentar usarlo con una variable de un tipo diferente de datos o una variable no inicializada.
-
-		//print_r($respuesta);
 
 		foreach($respuesta as $row => $item){
 		echo'<tr>
@@ -222,23 +253,23 @@ class MvcController{
 
 	}
 
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LO QUE HAYA INGRESADO EL USUARIO EN LA VISTA, SE CONDICIONA QUE SI SE OPRIME EL BOTON CON EL NOMBRE GUARDAR, SE TOMARA LO QUE HAYA INGRESADO EN LAS CAJAS DE TEXTO O SELECTS, Y ESTO SE GUARDA EN UN ARRAY, LA CUAL DESPUES SE USA COMO PARAMETRO PARA EJECUTAR LA FUNCION DE REGISTRO MAESTRO DEL MODELO
+		EL MODELO DEVUELVE UNA RESPUESTA, SI ES CORRECTA TE DEVUELVE A LA VISTA DE MAESTRO, SI NO REGRESA AL INDEX
+	*/
+
 	public function registroMaestrosController(){
 
 		if(isset($_POST["guardar"]))
 		{
-			//Recibe a traves del método POST el name (html) de usuario, password y email, se almacenan los datos en una variable de tipo array con sus respectivas propiedades (usuario, password y email):
-
 			
 				$datosController = array( "carrera"=>$_POST["carrera"],
 										  "nombre"=>$_POST["nombre"],
 										  "email"=>$_POST["email"],
 										  "pass"=>$_POST["pass"]);
 			
-
-			//Se le dice al modelo models/crud.php (Datos::registroUsuarioModel),que en la clase "Datos", la funcion "registroUsuarioModel" reciba en sus 2 parametros los valores "$datosController" y el nombre de la tabla a conectarnos la cual es "usuarios":
 			$respuesta = Datos::registroMaestroModel($datosController, "maestros");
 
-			//se imprime la respuesta en la vista 
 			if($respuesta == "success"){
 
 				header("location:index.php?action=maestros");
@@ -254,13 +285,22 @@ class MvcController{
 
 	}
 
+
+	/*
+		EN LA SIGUIENTE FUNCION, SE TRAE EL ID DEL MAESTRO QUE EL USUARIO DESEA MODIFICAR Y SE GUARDA EN UN ARRAY EL CUAL SE USA DESPUES COMO PARAMETRO PARA MANDAR A EJECUTAE UNA FUNCION DEL MODELO LLAMADA EDITAR MAESTRO
+
+		CON LA RESPUESTA QUE REGRESE LA FUNCION DEL MODELO SE IMPRIME LOS ELEMENTOS DE LA VISTA CON LA RESPECTIVA INFORMACION DE LA CARRERA SELECCIONADA
+
+		PARA MOSTRAR LA CARRERA EN LA QUE SE ENCUENTRA EL MAESTRO, SE UTILIZA UN CICLO EN EL CUAL SE VAN IMPRIMIENDO LAS CARRERAS REGISTRADAS EN LA BD, PERO CON LA CONDICION DE QUE SI ESA CARRERA QUE TIENE EL NUMERO DEL CICLO ES IGUAL A LA QUE SELECCIONO EL USUARIO SE QUEDE COMO PRIMERA, ESE DECIR, SELECCIONADA
+
+	*/
+
 	public function editarMaestroController(){
 
 		$respuesta1 = Datos::vistaCarrerasModel("carreras");
 
 		$datosController = $_GET["id"];
-		//echo $datosController;
-		//PREGUNTAR POR QUE NO ME FUNCIONA EL HIDDEN
+
 		$respuesta = Datos::editarMaestroModel($datosController, "maestros");
 
 		echo'
@@ -296,11 +336,14 @@ class MvcController{
 
 	}
 
+	/*
+		TENIENDO LA VISTA CON LA INFORMACION RESPECTIVA DE LO SELECCIONAD, SE CREA UNA FUNCION QUE PERMITA TRAER LA INFORMACION MODIFICADA DE EN LOS ELEMENTOS DE LA VISTA, SE GUARDA EN UN ARRAY, Y ESTE SE UTILIZA POSTERIORMENTE COMO PARAMETRO PARA EJECUTAR LA FUNCION DE ACTUALIZAR CARRERA DEL MODELO
+
+		LA FUNCION DEL MODELO REGRESA UNA RESPUESTA, SI ES CORRECTA TE DIRECCIONA A LA VISTA, SI NO, TE MANDA UN ERROR
+	*/
+
 	public function actualizarMaestroController(){
 
-		//if(isset($_POST))
-
-		//echo"hola";
 
 		if(isset($_POST["modificar"])){
 
@@ -328,6 +371,12 @@ class MvcController{
 	
 	}
 
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA EL ID DEL MAESTRO QUE HAYA SELECCIONADO EL USUARIO PARA ELIMINAR, SE GUARDA ESE ID EN UN ARRAY EL CUAL SE USA COMO PARAMETRO PARA MANDAR LLAMAR LA FUNCION DEL MODELO BORRAR MAESTRO
+
+		LA FUNCION DEVUELVE UNA RESPUESTA Y ESTA SE CONDICIONA, SI ES SATISFACTORIA TE DEVUELVE A LA VISTA
+	*/
+
 	public function borrarMaestroController(){
 
 		if(isset($_GET["idBorrar"])){
@@ -346,14 +395,17 @@ class MvcController{
 
 	}
 
+	/*
+		EN LA SIGUIENTE FUNCION SE MANDA EJECUTAR EL MODELO DE VUSTA CARRERAS
+
+		ESTE MODELO DEVUELVE UNA RESPUESTA, Y MEDIANTE ESA RESPUESTA SE MANDA IMPRIMIR UNA CAJA DE SELECCION CON TODAS LAS CARRERAS EXISTENTES EN LA BD
+	*/
+
 	public function CarrerasController(){
 
 
 		$respuesta = Datos::vistaCarrerasModel("carreras");
 
-		#El constructor foreach proporciona un modo sencillo de iterar sobre arrays. foreach funciona sólo sobre arrays y objetos, y emitirá un error al intentar usarlo con una variable de un tipo diferente de datos o una variable no inicializada.
-
-		//print_r($respuesta);
 
 		foreach($respuesta as $row => $item){
 
@@ -363,14 +415,16 @@ class MvcController{
 
 	}
 
+	/*
+		EN LA SIGUIENTE FUNCION SE MANDA EJECUTAR EL MODELO DE VUSTA CARRERAS
+
+		ESTE MODELO DEVUELVE UNA RESPUESTA, Y MEDIANTE ESA RESPUESTA SE MANDA IMPRIMIR UNA CAJA DE SELECCION CON TODAS LOS MAESTROS EXISTENTES EN LA BD
+	*/
+
 	public function MaestrosController(){
 
 
 		$respuesta = Datos::vistaMaestrosModel("maestros");
-
-		#El constructor foreach proporciona un modo sencillo de iterar sobre arrays. foreach funciona sólo sobre arrays y objetos, y emitirá un error al intentar usarlo con una variable de un tipo diferente de datos o una variable no inicializada.
-
-		//print_r($respuesta);
 
 		foreach($respuesta as $row => $item){
 
@@ -382,14 +436,18 @@ class MvcController{
 
 
 
+
+
+	/*
+		SE CREA UNA FUNCION QUE EJECUTA UNA FUNCION DEL MODELO LLAMADA VISTA ALUMNOS, DANDOLE COMO PARAMETRO EL NOMBRE DE LA TABLA DONDE SE ENCUENTRA LA INFORMACION
+
+		LA FUNCION DEL MODELO DEVUELVE UN ARRAY CON LA INFORMACION QUE ENCONTRO, MEDIANTE UN CICLO SE IMPRIME EL CUERPO DE LA TABLA DE LA VISTA DANDO COMO CADA FILA CADA ALUMNO REGISTRADO
+	*/
+
 	public function vistaAlumnosController(){
 
 
 		$respuesta = Datos::vistaAlumnosModel("alumno");
-
-		#El constructor foreach proporciona un modo sencillo de iterar sobre arrays. foreach funciona sólo sobre arrays y objetos, y emitirá un error al intentar usarlo con una variable de un tipo diferente de datos o una variable no inicializada.
-
-		//print_r($respuesta);
 
 		foreach($respuesta as $row => $item){
 		echo'<tr>
@@ -405,24 +463,26 @@ class MvcController{
 		}
 
 	}
+	
+
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LO QUE HAYA INGRESADO EL USUARIO EN LA VISTA, SE CONDICIONA QUE SI SE OPRIME EL BOTON CON EL NOMBRE GUARDAR, SE TOMARA LO QUE HAYA INGRESADO EN LA CAJA DE TEXTO Y EN LOS SELECT DE LA VISTA, Y ESTO SE GUARDA EN UN ARRAY, LA CUAL DESPUES SE USA COMO PARAMETRO PARA EJECUTAR LA FUNCION DE REGISTRO CARRERA DEL MODELO
+		EL MODELO DEVUELVE UNA RESPUESTA, SI ES CORRECTA TE DEVUELVE A LA VISTA DE CARRERAS, SI NO REGRESA AL INDEX
+	*/
 
 	public function registroAlumnoController(){
 
 		if(isset($_POST["guardar"]))
 		{
-			//Recibe a traves del método POST el name (html) de usuario, password y email, se almacenan los datos en una variable de tipo array con sus respectivas propiedades (usuario, password y email):
-
-			
+	
 				$datosController = array( "matricula"=>$_POST["matricula"],
 										  "nombre"=>$_POST["nombre"],
 										  "carrera"=>$_POST["carrera"],
 										  "tutor"=>$_POST["tutor"]);
 			
-
-			//Se le dice al modelo models/crud.php (Datos::registroUsuarioModel),que en la clase "Datos", la funcion "registroUsuarioModel" reciba en sus 2 parametros los valores "$datosController" y el nombre de la tabla a conectarnos la cual es "usuarios":
 			$respuesta = Datos::registroAlumnoModel($datosController, "alumno");
 
-			//se imprime la respuesta en la vista 
+
 			if($respuesta == "success"){
 
 				header("location:index.php?action=alumnos");
@@ -438,6 +498,17 @@ class MvcController{
 
 	}
 
+	/*
+		EN LA SIGUIENTE FUNCION, SE TRAE EL ID DEL ALUMNO QUE EL USUARIO DESEA MODIFICAR Y SE GUARDA EN UN ARRAY EL CUAL SE USA DESPUES COMO PARAMETRO PARA MANDAR A EJECUTAE UNA FUNCION DEL MODELO LLAMADA EDITAR ALUMNO
+
+		CON LA RESPUESTA QUE REGRESE LA FUNCION DEL MODELO SE IMPRIME LOS ELEMENTOS DE LA VISTA CON LA RESPECTIVA INFORMACION DEL ALUMNO SELECCIONADO
+
+		PARA MOSTRAR LA CARRERA EN LA QUE SE ENCUENTRA EL ALUMNO, SE UTILIZA UN CICLO EN EL CUAL SE VAN IMPRIMIENDO LAS CARRERAS REGISTRADAS EN LA BD, PERO CON LA CONDICION DE QUE SI ESA CARRERA QUE TIENE EL NUMERO DEL CICLO ES IGUAL A LA QUE SELECCIONO EL USUARIO SE QUEDE COMO PRIMERA, ESE DECIR, SELECCIONADA
+
+		SE REALIZA LO MISMO QUE CON LAS CARRERAS PARA MOSTRAR EL TUTOR CORRESPONDIENTE AL ALUMNO SELECCIONADO
+
+	*/
+
 	public function editarAlumnoController(){
 
 		$respuesta1 = Datos::vistaCarrerasModel("carreras");
@@ -446,9 +517,6 @@ class MvcController{
 
 		$datosController = $_GET["id"];
 
-		//echo "hola";
-		//echo $datosController;
-		//PREGUNTAR POR QUE NO ME FUNCIONA EL HIDDEN
 		$respuesta = Datos::editarAlumnoModel($datosController, "alumno");
 
 		echo'
@@ -501,13 +569,14 @@ class MvcController{
 
 	}
 
+	/*
+		TENIENDO LA VISTA CON LA INFORMACION RESPECTIVA DE LO SELECCIONADO, SE CREA UNA FUNCION QUE PERMITA TRAER LA INFORMACION MODIFICADA DE EN LOS ELEMENTOS DE LA VISTA, SE GUARDA EN UN ARRAY, Y ESTE SE UTILIZA POSTERIORMENTE COMO PARAMETRO PARA EJECUTAR LA FUNCION DE ACTUALIZAR ALUMNO DEL MODELO
+
+		LA FUNCION DEL MODELO REGRESA UNA RESPUESTA, SI ES CORRECTA TE DIRECCIONA A LA VISTA, SI NO, TE MANDA UN ERROR
+	*/
+
 	public function actualizarAlumnoController(){
 
-		//if(isset($_POST))
-
-		//echo"hola";
-
-		//echo "hola";
 
 		if(isset($_POST["modificar"])){
 
@@ -518,7 +587,6 @@ class MvcController{
 							      	  "tutor"=>$_POST["tutor"]);
 
 
-			//print_r($datosController);
 			$respuesta = Datos::actualizarAlumnoModel($datosController,"alumno");
 
 			if($respuesta == "success"){
@@ -536,6 +604,12 @@ class MvcController{
 		}
 	
 	}
+
+/*
+		EN LA SIGUIENTE FUNCION SE TOMA EL ID DEL ALUMNO QUE HAYA SELECCIONADO EL USUARIO PARA ELIMINAR, SE GUARDA ESE ID EN UN ARRAY EL CUAL SE USA COMO PARAMETRO PARA MANDAR LLAMAR LA FUNCION DEL MODELO BORRAR ALUMNO
+
+		LA FUNCION DEVUELVE UNA RESPUESTA Y ESTA SE CONDICIONA, SI ES SATISFACTORIA TE DEVUELVE A LA VISTA
+	*/
 
 	public function borrarAlumnoController(){
 
@@ -556,6 +630,14 @@ class MvcController{
 	}
 
 
+
+
+	/*
+		EN LA SIGUIENTE FUNCION SE TRAE EL ID DE LA TUTORIA QUE EL USUARIO HAYA SELECCIONADO PARA VER LOS DETALLE DE LA MISMA, SE GUARDA EL ID EN UN ARRAY EL CUAL POSTERIORMENTE SE USA COMO PARAMENTRO AL MANDAR LLAMAR LA FUNCION VISTA DETALLES TUTORIAS DEL MODELO
+
+		LA FUNCION DEVUELVE UNA RESPUESTA, LA CUAL ES UN ARRAYA Y CON ESTE MEDIANTE UN CICLO SE IMPRIME LOS DATOS EN UNA TABLA DE LA TUTORIA SELECCIONADA
+	*/
+
 	public function vistaDetTutoController(){
 
 		$datosController = $_GET["id"];
@@ -573,6 +655,12 @@ class MvcController{
 
 	}
 
+
+	/*
+		SE CREA UNA FUNCION QUE EJECUTA UNA FUNCION DEL MODELO LLAMADA VISTA TUTORIAS, DANDOLE COMO PARAMETRO EL NOMBRE DE LA TABLA DONDE SE ENCUENTRA LA INFORMACION
+
+		LA FUNCION DEL MODELO DEVUELVE UN ARRAY CON LA INFORMACION QUE ENCONTRO, MEDIANTE UN CICLO SE IMPRIME EL CUERPO DE LA TABLA DE LA VISTA DANDO COMO CADA FILA CADA CARRERA REGISTRADA
+	*/
 
 	public function vistaTutoriasController(){
 
