@@ -9,6 +9,10 @@
 
 <?php
 
+/*
+	SE CREA LA CLASE CONEXION Y SE GUARDA LA INFORMACION NECESARIA PARA LA CONEXION CON LA BASE DE DATOS
+*/
+
 class Conexion{
 
 	public function conectar(){
@@ -19,9 +23,5 @@ class Conexion{
 	}
 
 }
-
-//Verificar conexión correcta
-//$a= new Conexion();
-//$a -> conectar();
 
 ?>

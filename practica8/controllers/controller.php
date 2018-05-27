@@ -154,7 +154,7 @@ class MvcController{
 			<br><br>
 			<center>
 			<label>ID Carrera:</label>
-			<input type="text" value="'.$respuesta["id_carrera"].'" name="idEditar" >
+			<input type="text" value="'.$respuesta["id_carrera"].'" name="idEditar" readonly>
 			<br><br>
 			<label>Nombre Carrera:</label>
 			 <input type="text" value="'.$respuesta["nombre"].'" name="carreraEditar" required>
@@ -307,7 +307,7 @@ class MvcController{
 			<br><br>
 			<center>
 			<label>ID Maestro:</label>
-			<input type="text" value="'.$respuesta["id_maestro"].'" name="idEditar" >
+			<input type="text" value="'.$respuesta["id_maestro"].'" name="idEditar" readonly>
 			<br><br>
 			<label>Carrera:</label>
 			<select name="carrera">';
@@ -522,7 +522,7 @@ class MvcController{
 		echo'
 			<center>
 			<label>ID Alumno: </label>
-			<input type="text" value="'.$respuesta["id_alumno"].'" name="idEditar" >
+			<input type="text" value="'.$respuesta["id_alumno"].'" name="idEditar" readonly>
 			<br><br>
 			<label>Matricula: </label>
 			<input type="text" value="'.$respuesta["matricula"].'" name="matricula" required>
@@ -640,15 +640,20 @@ class MvcController{
 
 	public function vistaDetTutoController(){
 
+		//echo "hola";
+
 		$datosController = $_GET["id"];
 
-		$respuesta = Datos::vistaDetTutoModel("tutoria_info",$datosController);
+		//echo $datosController;
 
-		foreach($respuesta as $row => $item){
+		$respuesta5 = Datos::vistaDetTutoModel("tutoria_info",$datosController);
+
+		//print_r($respuesta5);
+
+		foreach($respuesta5 as $row => $item){
 		echo'<tr>
 				<td>'.$item["id_tutoria"].'</td>
 				<td>'.$item["alumNom"].'</td>
-				<td>'.$item["masNom"].'</td>
 			</tr>';
 
 		}
@@ -675,6 +680,7 @@ class MvcController{
 				<td>'.$item["tipo"].'</td>
 				<td>'.$item["tema_tutoria"].'</td>
 				<td><a href="index.php?action=detalles_tuto&id='.$item["id_tutoria"].'"><button class="button" >Ver Detalles</button></a></td>
+				<td><a href="index.php?action=agregar_al_tuto&id='.$item["id_tutoria"].'"><button class="button" >Agregar Alumno</button></a></td>
 			</tr>';
 
 		}
@@ -683,35 +689,189 @@ class MvcController{
 
 
 
-	#ACTUALIZAR USUARIO
-	#------------------------------------
-	/*public function actualizarCarreraController(){
+	/*
+		EN LA SIGUIENTE FUNCION SE TOMA LO QUE HAYA INGRESADO EL USUARIO EN LA VISTA, SE CONDICIONA QUE SI SE OPRIME EL BOTON CON EL NOMBRE GUARDAR, SE TOMARA LO QUE HAYA INGRESADO EN LA CAJA DE TEXTO Y EN LOS SELECT DE LA VISTA, Y ESTO SE GUARDA EN UN ARRAY, LA CUAL DESPUES SE USA COMO PARAMETRO PARA EJECUTAR LA FUNCION DE REGISTRO CARRERA DEL MODELO
+		EL MODELO DEVUELVE UNA RESPUESTA, SI ES CORRECTA TE DEVUELVE A LA VISTA DE CARRERAS, SI NO REGRESA AL INDEX
+	*/
 
-		//if(isset($_POST))
+	public function registroTutoriaController(){
 
+		//echo "hola";
 
-		if(isset($_POST["modificar"])){
+		if(isset($_POST["guardar"]))
+		{
+	
+				$datosController = array( "fecha"=>$_POST["fecha"],
+										  "hora"=>$_POST["hora"],
+										  "tipo"=>$_POST["tipo"],
+										  "tema_tutoria"=>$_POST["tema_tutoria"],
+										  "tutor"=>$_POST["tutor"]);
 
-			$datosController = array( "id_carrera"=>$_POST["idEditar"],
-							          "nombre"=>$_POST["carreraEditar"]);
+				//print_r($datosController);
+
 			
-			$respuesta = Datos::actualizarCarreraModel($datosController, "carreras");
+			$respuesta = Datos::registroTutoriaModel($datosController, "tutoria");
+
 
 			if($respuesta == "success"){
 
-				header("location:index.php?action=cambio_carrera");
+				header("location:index.php?action=tutorias");
 
 			}
 
 			else{
 
-				echo "error";
-
+				header("location:index.php");
 			}
 
 		}
+
+	}
+
+
+
+
+	public function mostrarAlTutoController(){
+
+
+		$datosController = $_GET["id"];
+
+		$respuesta = Datos::vistaAlumnosModel2("alumno");
+
+		
+
+		
+		echo '
+
+			<center>
+
+				<label>ID Tutoria: </label>
+				<input type="text" value="'.$datosController["id"].'" name="idEditar" readonly>
+				<br><br>
+				<select name="alumno">';
+
+					foreach($respuesta as $row => $item){
+
+						echo '<option value='.$item["id_alumno"].'>'.$item["nombre"].'</option>';
+
+					}
+
+		echo '</select>
+			   <br><br><br>
+			   <input type="submit" value="Guardar" name="guardar">
+
+
+			</center>
+
+
+		';
+
+	}
+
+	public function agregarAlTutoController(){
+
+
+		if(isset($_POST["guardar"]))
+		{
 	
-	}*/
+				$datosController = array( "id_tutoria"=>$_POST["idEditar"],
+										  "id_alumno"=>$_POST["alumno"]
+										  );
+
+			
+			$respuesta5 = Datos::agregarAlTutoModel($datosController, "tutoria_info");
+
+
+			if($respuesta == "success"){
+
+				header("location:index.php?action=tutorias");
+
+			}
+
+			else{
+
+				header("location:index.php");
+			}
+
+		}
+
+	}
+
+	public function reporteTutoriasController(){
+
+
+		$respuesta = Datos::vistaTutoriasModel("tutoria");
+
+		foreach($respuesta as $row => $item){
+		echo'<tr>
+				<td>'.$item["id_tutoria"].'</td>
+				<td>'.$item["fecha"].'</td>
+				<td>'.$item["hora"].'</td>
+				<td>'.$item["tipo"].'</td>
+				<td>'.$item["tema_tutoria"].'</td>
+			</tr>';
+
+		}
+
+	}
+
+	public function reporteAlumnosController(){
+
+
+		$respuesta = Datos::vistaAlumnosModel("alumno");
+
+		foreach($respuesta as $row => $item){
+		echo'<tr>
+				<td>'.$item["id_alumno"].'</td>
+				<td>'.$item["matricula"].'</td>
+				<td>'.$item["alumNom"].'</td>
+				<td>'.$item["carNom"].'</td>
+				<td>'.$item["masNom"].'</td>';
+
+		}
+
+	}
+
+
+
+	public function reporteMaestrosController(){
+
+
+		$respuesta = Datos::vistaMaestrosModel("maestros");
+
+
+		foreach($respuesta as $row => $item){
+		echo'<tr>
+				<td>'.$item["id_maestro"].'</td>
+				<td>'.$item["carNom"].'</td>
+				<td>'.$item["nombre"].'</td>
+				<td>'.$item["email"].'</td>
+				<td>'.$item["pass"].'</td>
+			</tr>';
+
+		}
+
+	}
+
+
+	public function reporteCarrerasController(){
+
+
+		$respuesta = Datos::vistaCarrerasModel("carreras");
+
+		
+
+		foreach($respuesta as $row => $item){
+		echo'<tr>
+				<td>'.$item["id_carrera"].'</td>
+				<td>'.$item["nombre"].'</td>
+			</tr>';
+
+		}
+
+	}
+
+
 
 }
 

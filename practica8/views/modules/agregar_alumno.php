@@ -1,5 +1,20 @@
 <?php
 
+/*
+  SE INICIA LA SESION PARA QUE EL USUARIO TENGA PERMITIDO INGRESAR A ESTA VISTA
+
+  LA VISTA ES PARA "AGREGAR UN ALUMNO"
+
+  SE CREA UN FORM CON METODO POST
+
+  Y SE CREAN LOS ELEMENTOS NECESARIOS PARA EL FORMULARIO PARA AGREGAR UN ALUMNO
+
+  SE CREA UN OBJETO DE LA CLASE CONTROLLER Y SE MANDA LLAMAR LAS FUNCIONES DEL CONTROLADOR:
+  CARRERAS (PARA MOSTRAR TODAS LAS CARRERAS DISPONIBLES)
+  MAESTROS (PARA MOSTRAR TODAS LOS MAESTROS DISPONIBLES)
+  REGISTRO ALUMNOS (PARA REGISTRAR LOS DATOS QUE INGRESO EL USUARIO EN EL FORMULARIO)
+*/
+
 session_start();
 
 if(!$_SESSION["validar"]){
@@ -44,21 +59,13 @@ if(!$_SESSION["validar"]){
 </center>
 
 
-<!--
-<form method="post">
-	
-	<label>Nombre Carrera:</label>
-	<input type="text"  name="nombre" required>
-	<input type="submit" value="Enviar" name="guardar">
-
-</form>-->
 
 <?php
-//Enviar los datos al controlador MvcController (es la clase principal de controller.php)
-//$registro = new MvcController();
-//se invoca la función registroUsuarioController de la clase MvcController:
-//$registro = new vistaUsuariosController();
-//$registro -> registroUsuarioController();
+
+/*
+  SE CREA UNA OBJETO DEL CONTROLADOR
+  Y SE MANDA LLAMAR LA FUNCION REGISTRO ALUMNO
+*/
 
 $registro = new MvcController();
 $registro ->registroAlumnoController();

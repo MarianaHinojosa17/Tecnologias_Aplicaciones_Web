@@ -368,6 +368,28 @@ class Datos extends Conexion{
 
 
 
+	public function vistaAlumnosModel2($tabla){
+
+		
+
+
+		$stmt = Conexion::conectar()->prepare("SELECT * from alumno");
+
+		$stmt->execute();
+
+		$results = $stmt->fetchAll();
+
+
+		return $results;
+
+
+		$stmt->close();
+
+	}
+
+
+
+
 
 	/*
 		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
@@ -501,7 +523,7 @@ class Datos extends Conexion{
 	public function vistaTutoriasModel($tabla){
 
 
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+		$stmt = Conexion::conectar()->prepare("SELECT * from $tabla");
 		$stmt->execute();
 
 		$results = $stmt->fetchAll();
@@ -513,10 +535,12 @@ class Datos extends Conexion{
 
 	}
 
+	
+
 	public function vistaDetTutoModel($tabla, $datosModel){
 
 		
-		$stmt = Conexion::conectar()->prepare("SELECT *, alumno.nombre as alumNom, maestros.nombre as masNom FROM $tabla inner join alumno on $tabla.id_alumno = alumno.id_alumno inner join maestros on $tabla.id_maestro = maestros.id_maestro where id_tutoria = :id_tutoria");
+		$stmt = Conexion::conectar()->prepare("SELECT *, alumno.nombre as alumNom FROM $tabla inner join alumno on $tabla.id_alumno = alumno.id_alumno WHERE id_tutoria = :id_tutoria");
 
 
 		$stmt->bindParam(":id_tutoria", $datosModel, PDO::PARAM_INT);
@@ -531,6 +555,91 @@ class Datos extends Conexion{
 		$stmt->close();
 
 	}
+
+
+
+
+	/*
+		LA FUNCION RECIBE COMO PARAMETRO LOS DATOS Y EL NOMBRE DE LA TABLA
+
+		EN LA SIGUIENTE FUNCION SE INSERTA EN LA TABLA DADA LOS VALORES QUE MANDO EL CONTROLADOR
+
+		SI SE EJECUTA CORRECTAMENTE DEVUELVE COMO VALOR SUCCESS, SI NO, DEVUELVE UN ERROR
+	*/
+
+	public function registroTutoriaModel($datosModel, $tabla){
+
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (fecha,hora,tipo,tema_tutoria,id_maestro) VALUES (:fecha,:hora,:tipo,:tema_tutoria,:id_maestro)");	
+
+
+		$stmt->bindParam(":fecha", $datosModel["fecha"]);
+		$stmt->bindParam(":hora", $datosModel["hora"]);	
+		$stmt->bindParam(":tipo", $datosModel["tipo"]);	
+		$stmt->bindParam(":tema_tutoria", $datosModel["tema_tutoria"]);
+		$stmt->bindParam(":id_maestro", $datosModel["tutor"]);			
+
+
+		if($stmt->execute()){
+
+			return "success";
+
+		}
+
+		else{
+
+			return "error";
+
+		}
+
+		$stmt->close();
+
+	}
+
+	public function agregarAlTutoModel($datosModel, $tabla){
+
+		//echo "hola";
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (id_tutoria,id_alumno) VALUES (:id_tutoria,:id_alumno)");	
+
+
+		$stmt->bindParam(":id_tutoria", $datosModel["id_tutoria"]);
+		$stmt->bindParam(":id_alumno", $datosModel["id_alumno"]);			
+
+
+		if($stmt->execute()){
+
+			return "success";
+
+		}
+
+		else{
+
+			return "error";
+
+		}
+
+		$stmt->close();
+
+	}
+
+
+
+	/*public function mostrarAlTutoModel($datosModel,$tabla){
+
+
+		$stmt = Conexion::conectar()->prepare("SELECT tipo FROM $tabla WHERE id_tutoria = :id_tutoria");
+		$stmt->bindParam(":id_tutoria", $datosModel["id"]);
+		$stmt->execute();
+
+		$results = $stmt->fetchAll();
+
+		return $results;
+
+
+		$stmt->close();
+
+	}*/
 
 }
 

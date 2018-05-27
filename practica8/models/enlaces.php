@@ -1,5 +1,12 @@
 <?php 
 
+/*
+	SE CREA LA CLASE PAGINAS
+
+	SE CREA LA FUNCION ENLACES PAGINAS, EN LA CUAL ES UNA SERIE DE CONDICIONES PARA SABER LA ACCION QUE EL USUARIO QUIERE REALIZAR Y HACIA DONDE SE VA ESA ACCION
+*/
+
+
 class Paginas{
 	
 	public function enlacesPaginasModel($enlaces){
@@ -8,6 +15,12 @@ class Paginas{
 		if($enlaces == "ingresar" || $enlaces == "usuarios" || $enlaces == "editar" || $enlaces == "salir" || $enlaces == "carreras" ){
 
 			$module =  "views/modules/".$enlaces.".php";
+		
+		}
+
+		else if($enlaces == "reportes"){
+
+			$module =  "views/modules/reportes.php";
 		
 		}
 
@@ -112,6 +125,13 @@ class Paginas{
 			$module =  "views/modules/detalles_tuto.php";
 		
 		}
+
+		else if($enlaces == "agregar_al_tuto"){
+
+			$module =  "views/modules/agregar_al_tuto.php";
+		
+		}
+
 
 		else{
 
