@@ -121,6 +121,61 @@ class Paginas{
 		
 		}
 
+		else if($enlaces == "tiendas"){
+
+			$module =  "views/modules/tiendas.php";
+		
+		}
+
+		else if($enlaces == "agregar_tienda"){
+
+			$module =  "views/modules/agregar_tienda.php";
+		
+		}
+
+		else if($enlaces == "editar_tienda"){
+
+			$module =  "views/modules/editar_tienda.php";
+		
+		}
+
+		else if($enlaces == "borrar_tienda"){
+
+			$module =  "views/modules/borrar_tienda.php";
+		
+		}
+
+		else if($enlaces == "ventas"){
+
+			$module =  "views/modules/ventas.php";
+		
+		}
+
+		else if($enlaces == "salir_tienda"){
+
+			$module =  "views/modules/salir_tienda.php";
+		
+		}
+
+		else if($enlaces == "estado_tienda"){
+
+			$module =  "views/modules/estado_tienda.php";
+		
+		}
+
+		else if($enlaces == "detalle_venta"){
+
+			$module =  "views/modules/detalle_venta.php";
+		
+		}
+
+		else if($enlaces == "agregar_venta"){
+
+			$module =  "views/modules/agregar_venta.php";
+		
+		}
+
+
 
 		else{
 
